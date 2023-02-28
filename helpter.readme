@@ -1,0 +1,9 @@
+flutter clean
+
+flutter pub get 
+
+C:\Users\__USER__\AppData\Local\Android\Sdk\platform-tools > abrir cmd 
+
+Ir no projeto > android > app > src > debug > AndroidManifest.xml > "package_name"
+
+cmd > adb uninstall "package_name"
