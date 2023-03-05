@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:responsividade_app/regras_layout.dart';
+import 'package:responsividade_app/diferentes_tamanhos.dart';
 
 void main() {
   runApp(MaterialApp(
-    title: 'Flutter Web',
+    title: 'App',
     debugShowCheckedModeBanner: false,
-    home: RegrasLayout(),
+    home: DiferentesTamanhos(),
   ));
 }

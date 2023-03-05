@@ -10,10 +10,12 @@ class ResponsividadeRowCol extends StatefulWidget {
 class _ResponsividadeRowColState extends State<ResponsividadeRowCol> {
   @override
   Widget build(BuildContext context) {
+    /*
     var height =
         MediaQuery.of(context).size.height; //Altura total do dispositivo
     var width =
         MediaQuery.of(context).size.width; //Largura total do dispositivo
+    */
     return Scaffold(
       appBar: AppBar(
         elevation: 5,
