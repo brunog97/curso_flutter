@@ -1,7 +1,5 @@
 import "package:flutter/material.dart";
 import "package:whatsappweb/model/usuario.dart";
-import "package:whatsappweb/telas/home.dart";
-import "package:whatsappweb/telas/login.dart";
 import "package:whatsappweb/telas/mensagens.dart";
 
 class Rotas {
@@ -9,12 +7,12 @@ class Rotas {
     final args = settings.arguments;
 
     switch (settings.name) {
-      case "/":
-        return MaterialPageRoute(builder: (_) => Login());
-      case "/login":
-        return MaterialPageRoute(builder: (_) => Login());
-      case "/home":
-        return MaterialPageRoute(builder: (_) => Home());
+      // case "/":
+      //   return MaterialPageRoute(builder: (_) => Login());
+      // case "/login":
+      //   return MaterialPageRoute(builder: (_) => Login());
+      // case "/home":
+      //   return MaterialPageRoute(builder: (_) => Home());
       case "/mensagens":
         return MaterialPageRoute(
           builder: (_) => Mensagens(args as Usuario),

@@ -33,7 +33,8 @@ class _HomeMobileState extends State<HomeMobile> {
               IconButton(
                 onPressed: () async {
                   await _auth.signOut().whenComplete(
-                      () => Navigator.pushReplacementNamed(context, "/login"));
+                      () => Navigator.pushNamed(context, "/login"));
+                  //Navigator.pushReplacementNamed(context, "/login"));
                 },
                 icon: Icon(Icons.logout),
               )

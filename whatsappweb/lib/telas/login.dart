@@ -86,7 +86,7 @@ class _LoginState extends State<Login> {
 
         usuariosRef.doc(usuario.idUsuario).set(usuario.toMap()).then((value) {
           // tela principal da app
-          Navigator.pushReplacementNamed(context, "/home");
+          Navigator.pushNamed(context, "/home");
         });
       });
     }
@@ -122,7 +122,8 @@ class _LoginState extends State<Login> {
               .signInWithEmailAndPassword(email: email, password: senha)
               .then((auth) {
             // tela principal da app
-            Navigator.pushReplacementNamed(context, "/home");
+            //Navigator.pushReplacementNamed(context, "/home");
+            Navigator.pushNamed(context, "/home");
           });
         }
       } else {}
