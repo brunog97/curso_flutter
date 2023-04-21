@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:expenses/components/chart.dart';
 import 'package:expenses/components/transaction_form.dart';
 import 'package:expenses/components/transaction_list.dart';
 import 'package:flutter/material.dart';
@@ -12,16 +13,29 @@ class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(),
       theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
-          accentColor: Colors.purple,
-          fontFamily: 'QuickSand',
-          appBarTheme: AppBarTheme(
-            textTheme: ThemeData.light().textTheme.copyWith(
-                  titleMedium: TextStyle(fontFamily: 'OpenSans'),
-                ),
-          )),
+        fontFamily: 'QuickSand',
+        appBarTheme: AppBarTheme(
+          toolbarTextStyle: ThemeData.light()
+              .textTheme
+              .copyWith(
+                titleMedium: TextStyle(fontFamily: 'OpenSans'),
+              )
+              .bodyMedium,
+          titleTextStyle: ThemeData.light()
+              .textTheme
+              .copyWith(
+                titleMedium: TextStyle(fontFamily: 'OpenSans'),
+              )
+              .titleLarge,
+        ),
+        primarySwatch: Colors.deepPurple,
+        secondaryHeaderColor: Colors.purple,
+        // colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple)
+        //     .copyWith(secondary: Colors.purple),
+      ),
     );
   }
 }
@@ -34,7 +48,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactions = [];
+  final List<Transaction> _transactions = [
+    Transaction(
+      id: 't1',
+      title: 'Novo tênis de corrida',
+      value: 310.76,
+      date: DateTime.now().subtract(Duration(days: 3)),
+    )
+  ];
+
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((transaction) {
+      return transaction.date.isAfter(DateTime.now().subtract(
+        Duration(days: 7),
+      ));
+    }).toList();
+  }
 
   _addTransaction(String title, double value) {
     final transaction = Transaction(
@@ -79,11 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Card(
-            color: Colors.blue,
-            elevation: 5,
-            child: Text('Gráfico'),
-          ),
+          Chart(recentTransaction: _recentTransactions),
           TransactionList(_transactions),
         ],
       )),
