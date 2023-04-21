@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "743053782422",
+    "project_id": "whatsapp-web-projeto-gomes",
+    "storage_bucket": "whatsapp-web-projeto-gomes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:743053782422:android:0386c709179d67bddd41b7",
+        "android_client_info": {
+          "package_name": "com.example.whatsappweb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "743053782422-nc4e7406j802nr1ovkdoa6pt46u5rv5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBH19Gk2X4C4kSsifCR4fPJ4OltP_pKa4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "743053782422-nc4e7406j802nr1ovkdoa6pt46u5rv5j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

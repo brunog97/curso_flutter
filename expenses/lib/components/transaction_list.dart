@@ -37,6 +37,31 @@ class TransactionList extends StatelessWidget {
               itemBuilder: (ctx, index) {
                 final tr = transactions[index];
                 return Card(
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 5,
+                    vertical: 8,
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30,
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: FittedBox(
+                          child: Text(
+                              "R\$${NumberFormat("###.00", "pt_BR").format(tr.value)}"),
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      tr.title,
+                    ),
+                    subtitle: Text(
+                      DateFormat('dd/MM/y').format(tr.date),
+                    ),
+                  ),
+                );
+                /*Card(
                   child: Row(
                     children: [
                       Container(
@@ -81,7 +106,7 @@ class TransactionList extends StatelessWidget {
                       )
                     ],
                   ),
-                );
+                );*/
               },
             ),
     );
