@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:whatsappweb/rotas.dart';
 import 'package:whatsappweb/telas/home.dart';
 import 'package:whatsappweb/telas/login.dart';
-import 'package:whatsappweb/telas/mensagens.dart';
 
 final ThemeData temaPadrao = ThemeData(
   primarySwatch: Colors.green,

@@ -1,66 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/product.dart';
-import '../utils/app_routes.dart';
+import 'package:shop/models/product.dart';
+import 'package:shop/models/product_list.dart';
+import 'package:shop/utils/app_routes.dart';
 
 class ProductItem extends StatelessWidget {
-  //final Product product;
-
-  const ProductItem({
-    Key? key,
-    //required this.product,
-  });
+  final Product product;
+  const ProductItem({required this.product});
 
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(
-      context,
-      listen: false, // as mudanças não refletem a product
-    );
-
-    //ClipRRect cortar de forma arredondada um elemento
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: GridTile(
-        footer: GridTileBar(
-          backgroundColor: Colors.black54,
-          //leading: esquerda
-          leading: Consumer<Product>(
-            //Consumer envolvendo apenas onde há mudança de status
-            builder: (ctx, product, _) => IconButton(
-              onPressed: () {
-                product.toggleFavorite();
-              },
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundImage: NetworkImage(product.imageUrl),
+      ),
+      title: Text(product.name),
+      trailing: SizedBox(
+        width: 100,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              onPressed: () => Navigator.of(context)
+                  .pushNamed(AppRoutes.productform, arguments: product),
               icon: Icon(
-                product.isFavorite == true
-                    ? Icons.favorite
-                    : Icons.favorite_border,
-                //Icons.favorite,
-                color: Theme.of(context).colorScheme.secondary,
+                Icons.edit,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
-          ),
-          //title: meio
-          title: Text(
-            product.title,
-            textAlign: TextAlign.center,
-          ),
-          //trailing: meio
-          trailing: IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.shopping_cart,
-              color: Theme.of(context).colorScheme.secondary,
+            IconButton(
+              onPressed: () {
+                showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Excluir Produto'),
+                    content: Text('Confirma a exclusão do produto?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: Text('Não'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(Colors.purple),
+                        ),
+                        child: Text(
+                          'Sim',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ).then((resposta) => resposta ?? false
+                    ? Provider.of<ProductList>(context, listen: false)
+                        .removeProduct(product)
+                    : null);
+              },
+              icon: Icon(
+                Icons.delete,
+                color: Theme.of(context).colorScheme.error,
+              ),
             ),
-          ),
-        ),
-        child: GestureDetector(
-          onTap: () => Navigator.of(context)
-              .pushNamed(AppRoutes.productDetail, arguments: product),
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
-          ),
+          ],
         ),
       ),
     );
