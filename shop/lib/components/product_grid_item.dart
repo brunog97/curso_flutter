@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/models/cart.dart';
+import '../exceptions/http_exception.dart';
 import '../models/product.dart';
 import '../utils/app_routes.dart';
 
@@ -34,8 +35,19 @@ class ProductGridItem extends StatelessWidget {
           leading: Consumer<Product>(
             //Consumer envolvendo apenas onde há mudança de status
             builder: (ctx, product, _) => IconButton(
-              onPressed: () {
-                product.toggleFavorite();
+              onPressed: () async {
+                try {
+                  await product.toggleFavorite();
+                } on HttpException catch (error) {
+                  //Esconde o snackbar em exibiçao
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  //Cria um novo snackbar
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(error.toString()),
+                    ),
+                  );
+                }
               },
               icon: Icon(
                 product.isFavorite == true
@@ -61,7 +73,7 @@ class ProductGridItem extends StatelessWidget {
               //ScaffoldMessenger.of(context).clearSnackBars();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  backgroundColor: Colors.blueGrey,
+                  backgroundColor: Colors.green.shade900,
                   content:
                       Text('Produto "${product.name}" adicionado ao carrinho!'),
                   duration: Duration(seconds: 3),

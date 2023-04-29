@@ -4,12 +4,15 @@ import 'package:shop/models/product.dart';
 import 'package:shop/models/product_list.dart';
 import 'package:shop/utils/app_routes.dart';
 
+import '../exceptions/http_exception.dart';
+
 class ProductItem extends StatelessWidget {
   final Product product;
   const ProductItem({required this.product});
 
   @override
   Widget build(BuildContext context) {
+    final mensagem = ScaffoldMessenger.of(context);
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(product.imageUrl),
@@ -53,10 +56,25 @@ class ProductItem extends StatelessWidget {
                       ),
                     ],
                   ),
-                ).then((resposta) => resposta ?? false
-                    ? Provider.of<ProductList>(context, listen: false)
-                        .removeProduct(product)
-                    : null);
+                ).then((resposta) async {
+                  if (resposta ?? false) {
+                    try {
+                      await Provider.of<ProductList>(context, listen: false)
+                          .removeProduct(product);
+                    } on HttpException catch (error) {
+                      //Esconde o snackbar em exibiçao
+                      mensagem.hideCurrentSnackBar();
+                      //Cria um novo snackbar
+                      mensagem.showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            error.toString(),
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                });
               },
               icon: Icon(
                 Icons.delete,

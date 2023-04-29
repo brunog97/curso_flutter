@@ -40,7 +40,7 @@ class _OrderComponentState extends State<OrderComponent> {
                 horizontal: 15,
                 vertical: 4,
               ),
-              height: widget.order.products.length * 25.0,
+              height: widget.order.products.length * 30.0,
               child: ListView(
                 children: widget.order.products.asMap().entries.map((products) {
                   CartItem product = products.value;

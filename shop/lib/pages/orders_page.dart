@@ -6,24 +6,62 @@ import 'package:shop/components/order_component.dart';
 import '../models/order_list.dart';
 
 class OrdersPage extends StatelessWidget {
-  const OrdersPage({super.key});
+  // bool _isLoading = true;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   Provider.of<OrderList>(context, listen: false).loadOrders().then(
+  //         (_) => setState(() => _isLoading = false),
+  //       );
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final OrderList orders = Provider.of(context);
+    //final OrderList orders = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Meus Pedidos'),
       ),
       drawer: AppDrawer(),
-      body: orders.itemsCount == 0
+      body: FutureBuilder(
+        future: Provider.of<OrderList>(context, listen: false).loadOrders(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return Consumer<OrderList>(
+              builder: (context, orders, _) => orders.itemsCount == 0
+                  ? Center(
+                      child: Text('Não há pedidos'),
+                    )
+                  : ListView.builder(
+                      itemCount: orders.itemsCount,
+                      itemBuilder: (ctx, i) => OrderComponent(
+                        order: orders.items[i],
+                      ),
+                    ),
+            );
+          }
+        },
+      ),
+      /*
+      body: _isLoading
           ? Center(
-              child: Text('Não há pedidos'),
+              child: CircularProgressIndicator(),
             )
-          : ListView.builder(
-              itemCount: orders.itemsCount,
-              itemBuilder: (ctx, i) => OrderComponent(order: orders.items[i]),
-            ),
+          : orders.itemsCount == 0
+              ? Center(
+                  child: Text('Não há pedidos'),
+                )
+              : ListView.builder(
+                  itemCount: orders.itemsCount,
+                  itemBuilder: (ctx, i) =>
+                      OrderComponent(order: orders.items[i]),
+                ),
+    */
     );
   }
 }
