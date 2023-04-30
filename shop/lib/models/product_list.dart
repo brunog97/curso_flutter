@@ -9,6 +9,14 @@ import 'product.dart';
 
 class ProductList with ChangeNotifier {
   final _apiURL = Constants.productBaseURL;
+  final String _token;
+  final String _userId;
+
+  ProductList([
+    this._token = '',
+    this._userId = '',
+    this._items = const [],
+  ]);
 
   List<Product> _items = []; //dummyProducts;
 
@@ -19,13 +27,25 @@ class ProductList with ChangeNotifier {
 
   Future<void> loadProducts() async {
     _items = []; // _items.clear(); // limpa a lista
-    final response = await http.get(Uri.parse('$_apiURL.json'));
+    final response = await http.get(
+      Uri.parse('$_apiURL.json?auth=$_token'),
+    );
 
     if (response.body == 'null') return;
+
+    final favResponse = await http.get(
+      Uri.parse(
+        '${Constants.userFavoriteUrl}/$_userId.json?auth=$_token',
+      ),
+    );
+
+    Map<String, dynamic> favProducts =
+        favResponse.body == 'null' ? {} : jsonDecode(favResponse.body);
 
     Map<String, dynamic> data = jsonDecode(response.body);
 
     data.forEach((productId, productData) {
+      final isFavorite = favProducts[productId] ?? false;
       _items.add(
         Product(
           id: productId,
@@ -33,7 +53,7 @@ class ProductList with ChangeNotifier {
           description: productData['description'],
           price: productData['price'],
           imageUrl: productData['imageUrl'],
-          isFavorite: productData['isFavorite'],
+          isFavorite: isFavorite, //productData['isFavorite'],
         ),
       );
     });
@@ -64,7 +84,7 @@ class ProductList with ChangeNotifier {
 
     if (index >= 0) {
       await http.patch(
-        Uri.parse('$_apiURL/${product.id}.json'),
+        Uri.parse('$_apiURL/${product.id}.json?auth=$_token'),
         body: jsonEncode({
           "name": product.name,
           "description": product.description,
@@ -89,7 +109,7 @@ class ProductList with ChangeNotifier {
       notifyListeners();
 
       final response = await http.delete(
-        Uri.parse('$_apiURL/${product.id}.json'),
+        Uri.parse('$_apiURL/${product.id}.json?auth=$_token'),
       );
 
       // Erro que temos um problema
@@ -105,13 +125,13 @@ class ProductList with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final future = await http.post(
-      Uri.parse('$_apiURL.json'),
+      Uri.parse('$_apiURL.json?auth=$_token'),
       body: jsonEncode({
         "name": product.name,
         "description": product.description,
         "price": product.price,
         "imageUrl": product.imageUrl,
-        "isFavorite": product.isFavorite
+        //"isFavorite": product.isFavorite
       }),
     );
 

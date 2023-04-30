@@ -3,4 +3,6 @@ class Constants {
       'https://joelmaplay-f7053-default-rtdb.firebaseio.com/products';
   static const orderBaseURL =
       'https://joelmaplay-f7053-default-rtdb.firebaseio.com/orders';
+  static const userFavoriteUrl =
+      'https://joelmaplay-f7053-default-rtdb.firebaseio.com/userFavorites';
 }

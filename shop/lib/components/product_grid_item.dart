@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/models/auth.dart';
 import 'package:shop/models/cart.dart';
 import '../exceptions/http_exception.dart';
 import '../models/product.dart';
@@ -22,8 +23,10 @@ class ProductGridItem extends StatelessWidget {
 
     final cart = Provider.of<Cart>(
       context,
-      listen: true, // as mudanças  refletem a product
+      listen: false, // as mudanças não refletem a cart
     );
+
+    final auth = Provider.of<Auth>(context, listen: false);
 
     //ClipRRect cortar de forma arredondada um elemento
     return ClipRRect(
@@ -37,7 +40,10 @@ class ProductGridItem extends StatelessWidget {
             builder: (ctx, product, _) => IconButton(
               onPressed: () async {
                 try {
-                  await product.toggleFavorite();
+                  await product.toggleFavorite(
+                    auth.token ?? '',
+                    auth.userId ?? '',
+                  );
                 } on HttpException catch (error) {
                   //Esconde o snackbar em exibiçao
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();

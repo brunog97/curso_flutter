@@ -28,17 +28,17 @@ class Product with ChangeNotifier {
   }
 
   //Alterna valor do favorito
-  Future<void> toggleFavorite() async {
-    const apiURL = Constants.productBaseURL;
+  Future<void> toggleFavorite(String token, String userId) async {
+    const apiURL = Constants.userFavoriteUrl;
 
     try {
       _toggleFavorite();
 
-      final response = await http.patch(
-        Uri.parse('$apiURL/$id.json'),
-        body: jsonEncode({
-          "isFavorite": isFavorite,
-        }),
+      final response = await http.put(
+        Uri.parse(
+          '$apiURL/$userId/$id.json?auth=$token',
+        ),
+        body: jsonEncode(isFavorite),
       );
 
       if (response.statusCode >= 400) {
