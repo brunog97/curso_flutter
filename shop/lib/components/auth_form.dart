@@ -12,11 +12,12 @@ class AuthForm extends StatefulWidget {
   State<AuthForm> createState() => _AuthFormState();
 }
 
-class _AuthFormState extends State<AuthForm> {
+class _AuthFormState extends State<AuthForm>
+    with SingleTickerProviderStateMixin {
   AuthMode _authMode = AuthMode.loginMode;
 
   bool get _isLogin => _authMode == AuthMode.loginMode;
-  bool get _isSignUp => _authMode == AuthMode.signUpMode;
+  //bool get _isSignUp => _authMode == AuthMode.signUpMode;
   bool _obscureText = true;
   bool _isLoading = false;
 
@@ -24,12 +25,47 @@ class _AuthFormState extends State<AuthForm> {
   final _formKey = GlobalKey<FormState>();
 
   AnimationController? _animationController;
-  Animation<Size>? _heightAnimation;
+  Animation<double>? _opacityAnimation;
+  Animation<Offset>? _slideAnimation;
 
   @override
   void initState() {
     super.initState();
-    //_animationController = AnimationController(vsync: 1);
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: 300,
+      ),
+    );
+
+    _opacityAnimation = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController!,
+        curve: Curves.linear,
+      ),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: Offset(0, -1.5),
+      end: Offset(0, 0.0),
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController!,
+        curve: Curves.linear,
+      ),
+    );
+
+    _opacityAnimation?.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController!.dispose();
   }
 
   Map<String, String> _authData = {
@@ -45,8 +81,10 @@ class _AuthFormState extends State<AuthForm> {
     setState(() {
       if (_isLogin) {
         _authMode = AuthMode.signUpMode;
+        _animationController?.forward();
       } else {
         _authMode = AuthMode.loginMode;
+        _animationController?.reverse();
       }
     });
   }
@@ -114,9 +152,12 @@ class _AuthFormState extends State<AuthForm> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Container(
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.linear,
         padding: EdgeInsets.all(15),
         height: _isLogin ? 320 : 400,
+        //height: _heightAnimation?.value.height ?? (_isLogin ? 320 : 400),
         width: deviceSize.width * 0.75,
         child: Form(
           key: _formKey,
@@ -160,23 +201,36 @@ class _AuthFormState extends State<AuthForm> {
                   return null;
                 },
               ),
-              if (_isSignUp)
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Confirmar Senha'),
-                  keyboardType: TextInputType.text,
-                  obscureText: _obscureText,
-                  validator: _isLogin
-                      ? null
-                      : (passwordField) {
-                          final password = passwordField ?? '';
-
-                          if (_passwordController.text != password) {
-                            return 'Senhas informadas não conferem';
-                          }
-
-                          return null;
-                        },
+              AnimatedContainer(
+                constraints: BoxConstraints(
+                  minHeight: _isLogin ? 0 : 60,
+                  maxHeight: _isLogin ? 0 : 120,
                 ),
+                duration: Duration(milliseconds: 300),
+                curve: Curves.linear,
+                child: FadeTransition(
+                  opacity: _opacityAnimation!,
+                  child: SlideTransition(
+                    position: _slideAnimation!,
+                    child: TextFormField(
+                      decoration: InputDecoration(labelText: 'Confirmar Senha'),
+                      keyboardType: TextInputType.text,
+                      obscureText: _obscureText,
+                      validator: _isLogin
+                          ? null
+                          : (passwordField) {
+                              final password = passwordField ?? '';
+
+                              if (_passwordController.text != password) {
+                                return 'Senhas informadas não conferem';
+                              }
+
+                              return null;
+                            },
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
                 height: 20,
               ),

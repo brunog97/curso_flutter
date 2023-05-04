@@ -9,53 +9,82 @@ class ProductDetailPage extends StatelessWidget {
     final Product product =
         ModalRoute.of(context)!.settings.arguments as Product;
     return Scaffold(
+      /*
       appBar: AppBar(
         title: Text(product.name),
       ),
-      body: SingleChildScrollView(
-          child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Theme.of(context).colorScheme.primary,
-                  width: 13,
-                ),
+      */
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            leading: CircleAvatar(
+              backgroundColor: Colors.purple,
+              child: BackButton(
+                color: Colors.white,
+                onPressed: () => Navigator.of(context).pop(),
               ),
             ),
-            height: 300,
-            width: double.infinity,
-            child: Image.network(
-              product.imageUrl,
-              fit: BoxFit.cover,
+            // iconTheme: IconThemeData(color: Colors.black),
+            expandedHeight: 300,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(product.name),
+              centerTitle: true,
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Hero(
+                    tag: product.id,
+                    child: Image.network(
+                      product.imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment(0, 0.8),
+                        end: Alignment(0, 0),
+                        colors: [
+                          Color.fromRGBO(0, 0, 0, 0.6),
+                          Color.fromRGBO(0, 0, 0, 0.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            'R\$ ${product.price}',
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 20,
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 10,
-            ),
-            width: double.infinity,
-            child: Text(
-              product.description,
-              textAlign: TextAlign.center,
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Text(
+                  'R\$ ${product.price}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
+                  width: double.infinity,
+                  child: Text(
+                    product.description,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
-      )),
+      ),
     );
   }
 }

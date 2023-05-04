@@ -16,31 +16,37 @@ class _OrderComponentState extends State<OrderComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: [
-          ListTile(
-            title: Text('R\$ ${widget.order.total.toStringAsFixed(2)}'),
-            subtitle: Text(
-              DateFormat('dd/MM/yyyy hh:mm').format(widget.order.date),
+    final itemsHeight = widget.order.products.length * 30.0;
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      height: _expanded ? itemsHeight + 80 : 100,
+      child: Card(
+        child: Column(
+          children: [
+            ListTile(
+              title: Text('R\$ ${widget.order.total.toStringAsFixed(2)}'),
+              subtitle: Text(
+                DateFormat('dd/MM/yyyy hh:mm').format(widget.order.date),
+              ),
+              trailing: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _expanded = !_expanded;
+                    print(_expanded);
+                  });
+                },
+                icon: Icon(Icons.expand_more),
+              ),
             ),
-            trailing: IconButton(
-              onPressed: () {
-                setState(() {
-                  _expanded = !_expanded;
-                  print(_expanded);
-                });
-              },
-              icon: Icon(Icons.expand_more),
-            ),
-          ),
-          if (_expanded)
-            Container(
+            AnimatedContainer(
+              height: _expanded ? itemsHeight : 0,
+              duration: Duration(
+                milliseconds: 300,
+              ),
               padding: EdgeInsets.symmetric(
                 horizontal: 15,
                 vertical: 4,
               ),
-              height: widget.order.products.length * 30.0,
               child: ListView(
                 children: widget.order.products.asMap().entries.map((products) {
                   CartItem product = products.value;
@@ -65,7 +71,8 @@ class _OrderComponentState extends State<OrderComponent> {
                 }).toList(),
               ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
