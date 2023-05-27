@@ -1,0 +1,8 @@
+
+#arquivo pra especificar onde fica a store e o build_runner ser mais rapido
+targets:
+  $default:
+    builders:
+      mobx_codegen|mobx_generator:
+        generate_for:
+          - "lib/store/**.store.dart"
